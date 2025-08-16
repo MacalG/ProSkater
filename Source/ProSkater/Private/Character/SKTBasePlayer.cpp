@@ -13,6 +13,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Engine/Engine.h"
 #include "InputActionValue.h"
+#include <Widgets/Player/SKTPlayerHUD.h>
 
 // Sets default values
 ASKTBasePlayer::ASKTBasePlayer()
@@ -64,6 +65,15 @@ void ASKTBasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (PlayerPointsWidgetClass)
+    {
+        PlayerPointsWidgetInstance = Cast<USKTPlayerHUD>(CreateWidget(GetWorld(), PlayerPointsWidgetClass));
+        if (PlayerPointsWidgetInstance)
+        {
+            PlayerPointsWidgetInstance->AddToViewport();
+            PlayerPointsWidgetInstance->UpdatePoints(Points);
+        }
+    }
 }
 
 void ASKTBasePlayer::Tick(float DeltaTime)
@@ -119,6 +129,10 @@ void ASKTBasePlayer::AddPoints(int32 Amount)
 	if (Amount <= 0) return;
 
 	Points += Amount;
+	if (PlayerPointsWidgetInstance)
+	{
+		PlayerPointsWidgetInstance->UpdatePoints(Points);
+	}
 }
 
 void ASKTBasePlayer::Look(const FInputActionValue& Value)

@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Blueprint/UserWidget.h"
+#include "Widgets/Player/SKTPlayerHUD.h"
 #include "SKTBasePlayer.generated.h"
 
 class USpringArmComponent;
@@ -55,6 +57,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* JumpMontage;
 
+	/** Base UI */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<USKTPlayerHUD> PlayerPointsWidgetClass;
+
 	/** Points */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	int32 Points = 0;
@@ -62,6 +68,9 @@ public:
 	/** Collision to Grab Interactables */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Collision")
 	class USphereComponent* CollectableCollision;
+
+	UPROPERTY()
+	USKTPlayerHUD* PlayerPointsWidgetInstance;
 
 	float MaxSpeed = 1200.f;
 	float MinSpeed = 0.f;
@@ -91,10 +100,8 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	// Função para adicionar pontos
 	void AddPoints(int32 Amount);
 
-	// Função para obter os pontos atuais (opcional)
 	int32 GetPoints() const { return Points; }
 
 protected:
