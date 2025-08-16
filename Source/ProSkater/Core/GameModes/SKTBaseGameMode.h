@@ -14,4 +14,5 @@ class PROSKATER_API ASKTBaseGameMode : public AGameMode
 {
 	GENERATED_BODY()
 	
+
 };
