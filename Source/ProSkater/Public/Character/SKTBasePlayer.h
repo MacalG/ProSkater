@@ -10,6 +10,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class USphereComponent;
 struct FInputActionValue;
 
 UCLASS()
@@ -46,13 +47,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* SlowDownAction;
 
-	// Speed Up Montage
+	/** Speed Up Montage */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* SpeedUpMontage;
 
-	// Jump Montage
+	/** Jump Montage */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	UAnimMontage* JumpMontage;
+
+	/** Points */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
+	int32 Points = 0;
+
+	/** Collision to Grab Interactables */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Collision")
+	class USphereComponent* CollectableCollision;
 
 	float MaxSpeed = 1200.f;
 	float MinSpeed = 0.f;
@@ -81,6 +90,12 @@ public:
 
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	// Função para adicionar pontos
+	void AddPoints(int32 Amount);
+
+	// Função para obter os pontos atuais (opcional)
+	int32 GetPoints() const { return Points; }
 
 protected:
 	/** Called for movement input */

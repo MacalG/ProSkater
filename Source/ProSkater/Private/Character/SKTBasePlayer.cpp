@@ -4,6 +4,7 @@
 #include "Character/SKTBasePlayer.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -26,7 +27,7 @@ ASKTBasePlayer::ASKTBasePlayer()
 
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 
 	GetCharacterMovement()->JumpZVelocity = 500.f;
 	GetCharacterMovement()->AirControl = 0.35f;
@@ -34,6 +35,14 @@ ASKTBasePlayer::ASKTBasePlayer()
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
+
+	CollectableCollision = CreateDefaultSubobject<USphereComponent>(TEXT("CollectableCollision"));
+	CollectableCollision->SetupAttachment(RootComponent);
+	CollectableCollision->InitSphereRadius(50.f);
+	CollectableCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	CollectableCollision->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+	CollectableCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	CollectableCollision->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FQuat(0.f, 0.f, 90.f, 0.f));
@@ -103,6 +112,13 @@ void ASKTBasePlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		//Slow Down
 		EnhancedInputComponent->BindAction(SlowDownAction, ETriggerEvent::Triggered, this, &ASKTBasePlayer::SlowDown);
 	}
+}
+
+void ASKTBasePlayer::AddPoints(int32 Amount)
+{
+	if (Amount <= 0) return;
+
+	Points += Amount;
 }
 
 void ASKTBasePlayer::Look(const FInputActionValue& Value)
