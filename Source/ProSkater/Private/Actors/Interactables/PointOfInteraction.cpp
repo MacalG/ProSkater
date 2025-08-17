@@ -14,6 +14,7 @@ APointOfInteraction::APointOfInteraction()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	RootComponent = Sphere;
+	Sphere->SetSphereRadius(40.f);
 	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Sphere->SetCollisionObjectType(ECC_WorldDynamic);
 
