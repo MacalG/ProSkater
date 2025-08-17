@@ -24,15 +24,43 @@ void USKTPlayerHUD::NativeConstruct()
     TEXT("ON FIRE!")
     };
 
+    SpeedLevels = {
+        { 0.f,   TEXT("Stopped"),   FLinearColor::Red },
+        { 300.f, TEXT("Slow"),      FLinearColor::Yellow },
+        { 700.f, TEXT("Fast"),      FLinearColor::Green },
+        { FLT_MAX, TEXT("Very Fast"), FLinearColor::Blue }
+    };
+
     if (RadicalMessageText)
     {
         RadicalMessageText->SetText(FText::FromString(TEXT("")));
+    }
+
+    if (SpeedText)
+    {
+        SpeedText->SetText(FText::FromString(FString::Printf(TEXT("SPEED\n%s"), *SpeedLevels[0].Name)));
+        SpeedText->SetColorAndOpacity(FSlateColor(SpeedLevels[0].Color));
     }
 
     if (PointsText)
     {
         PointsText->SetColorAndOpacity(FSlateColor(PointsColor));
         PointsText->SetText(FText::FromString(TEXT("SCORE\n0")));
+    }
+}
+
+void USKTPlayerHUD::UpdateSpeed(float CurrentSpeed)
+{
+    if (!SpeedText) return;
+
+    for (const FSpeedLevel& Level : SpeedLevels)
+    {
+        if (CurrentSpeed <= Level.MaxSpeed)
+        {
+            SpeedText->SetText(FText::FromString(FString::Printf(TEXT("SPEED\n%s"), *Level.Name)));
+            SpeedText->SetColorAndOpacity(FSlateColor(Level.Color));
+            break;
+        }
     }
 }
 
@@ -106,7 +134,7 @@ void USKTPlayerHUD::IncrementScore()
             CurrentDisplayPoints = TargetPoints;
         }
 
-        if (CurrentDisplayPoints >= 1000)
+        if (CurrentDisplayPoints >= 400)
         {
             TriggerRandomRadicalMessage();
         }

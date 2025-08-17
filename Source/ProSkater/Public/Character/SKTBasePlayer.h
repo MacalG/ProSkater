@@ -61,6 +61,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<USKTPlayerHUD> PlayerPointsWidgetClass;
 
+	/** Skate */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UStaticMeshComponent* SkateMesh;
+
 	/** Points */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats")
 	int32 Points = 0;

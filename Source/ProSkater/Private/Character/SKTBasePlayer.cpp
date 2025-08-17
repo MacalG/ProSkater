@@ -37,6 +37,11 @@ ASKTBasePlayer::ASKTBasePlayer()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
+	SkateMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SkateMesh"));
+	SkateMesh->SetupAttachment(GetMesh());
+
+	SkateMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	CollectableCollision = CreateDefaultSubobject<USphereComponent>(TEXT("CollectableCollision"));
 	CollectableCollision->SetupAttachment(RootComponent);
 	CollectableCollision->InitSphereRadius(50.f);
@@ -161,6 +166,11 @@ void ASKTBasePlayer::SpeedUp()
 		}
 	}
 
+	if (PlayerPointsWidgetInstance)
+	{
+		PlayerPointsWidgetInstance->UpdateSpeed(CurrentSpeed);
+	}
+
 	GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
 
 	if (SpeedUpMontage && GetMesh()->GetAnimInstance())
@@ -188,6 +198,12 @@ void ASKTBasePlayer::SlowDown()
 	{
 		CurrentSpeed = MinSpeed;
 	}
+	
+	if (PlayerPointsWidgetInstance)
+	{
+		PlayerPointsWidgetInstance->UpdateSpeed(CurrentSpeed);
+	}
+
 	GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
 }
 

@@ -8,6 +8,16 @@
 #include <Components/TextBlock.h>
 #include "SKTPlayerHUD.generated.h"
 
+USTRUCT()
+struct FSpeedLevel
+{
+    GENERATED_BODY()
+
+    float MaxSpeed;
+    FString Name;
+    FLinearColor Color;
+};
+
 /**
  * 
  */
@@ -20,12 +30,20 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Points")
     void UpdatePoints(int32 NewPoints);
 
+    void UpdateSpeed(float CurrentSpeed);
+
+    UPROPERTY(EditAnywhere, Category = "UI|Speed")
+    TArray<FSpeedLevel> SpeedLevels;
+
 protected:
     UPROPERTY(meta = (BindWidget))
     UTextBlock* PointsText;
 
     UPROPERTY(meta = (BindWidget))
     UTextBlock* RadicalMessageText;
+
+    UPROPERTY(meta = (BindWidget))
+    UTextBlock* SpeedText;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Points|Style")
     FLinearColor PointsColor = FLinearColor::Red;
